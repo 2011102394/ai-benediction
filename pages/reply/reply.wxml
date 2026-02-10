@@ -9,21 +9,23 @@
     <view class="loading-small" wx:if="{{festivals.length === 0}}">
       <text>加载中...</text>
     </view>
-    <view class="selector" wx:else>
-      <view 
-        class="selector-item {{selectedFestival === item.id ? 'active' : ''}}"
-        wx:for="{{festivals}}"
-        wx:key="id"
-        data-id="{{item.id}}"
-        data-name="{{item.name}}"
-        data-theme="{{item.theme}}"
-        bindtap="selectFestival"
-        style="{{selectedFestival === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
-      >
-        <text>{{item.icon}}</text>
-        <text>{{item.name}}</text>
+    <scroll-view class="selector-scroll" scroll-y enhanced show-scrollbar="{{false}}" wx:else>
+      <view class="selector-grid">
+        <view 
+          class="selector-item {{selectedFestival === item.id ? 'active' : ''}}"
+          wx:for="{{festivals}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+          data-theme="{{item.theme}}"
+          bindtap="selectFestival"
+          style="{{selectedFestival === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
+        >
+          <text class="item-icon">{{item.icon}}</text>
+          <text class="item-name">{{item.name}}</text>
+        </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 
   <!-- 回复对象选择 -->
@@ -36,20 +38,22 @@
     <view class="loading-small" wx:if="{{recipients.length === 0}}">
       <text>加载中...</text>
     </view>
-    <view class="selector" wx:else>
-      <view 
-        class="selector-item {{selectedRecipient === item.id ? 'active' : ''}}"
-        wx:for="{{recipients}}"
-        wx:key="id"
-        data-id="{{item.id}}"
-        data-name="{{item.name}}"
-        bindtap="selectRecipient"
-        style="{{selectedRecipient === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
-      >
-        <text>{{item.icon}}</text>
-        <text>{{item.name}}</text>
+    <scroll-view class="selector-scroll" scroll-y enhanced show-scrollbar="{{false}}" wx:else>
+      <view class="selector-grid">
+        <view 
+          class="selector-item {{selectedRecipient === item.id ? 'active' : ''}}"
+          wx:for="{{recipients}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+          bindtap="selectRecipient"
+          style="{{selectedRecipient === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
+        >
+          <text class="item-icon">{{item.icon}}</text>
+          <text class="item-name">{{item.name}}</text>
+        </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 
   <!-- 收到的祝福语输入 -->

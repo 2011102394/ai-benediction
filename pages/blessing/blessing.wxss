@@ -6,113 +6,205 @@
   background: linear-gradient(180deg, #FFF8F0 0%, #f7f7f7 100%);
 }
 
-/* 选择器样式优化 */
-.selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16rpx;
+/* 选择器滚动容器 - 最多显示3行 */
+.selector-scroll {
+  max-height: 510rpx;
+}
+
+/* 网格选择器 - 每行4个 */
+.selector-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+  padding: 4rpx 0;
 }
 
 .selector-item {
-  padding: 16rpx 28rpx;
-  background: #f5f5f5;
-  border-radius: 32rpx;
-  font-size: 28rpx;
-  color: #666;
-  transition: all 0.3s ease;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8rpx;
+  justify-content: center;
+  padding: 24rpx 0;
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
 }
 
 .selector-item.active {
   box-shadow: 0 4rpx 12rpx rgba(211, 47, 47, 0.3);
 }
 
-/* 自定义输入框 */
-.custom-input {
-  display: flex;
-  align-items: center;
-  margin-top: 24rpx;
-  padding: 16rpx 20rpx;
-  background: #f9f9f9;
-  border-radius: 12rpx;
-  border: 2rpx solid #eee;
+.selector-item .item-icon {
+  font-size: 44rpx;
+  margin-bottom: 12rpx;
 }
 
-.custom-input input {
-  flex: 1;
-  height: 60rpx;
-  font-size: 28rpx;
-}
-
-.custom-input .btn-add {
-  padding: 12rpx 28rpx;
-  background: linear-gradient(135deg, #D32F2F, #FF6B6B);
-  color: #fff;
-  border-radius: 8rpx;
+.selector-item .item-name {
   font-size: 26rpx;
-  margin-left: 16rpx;
+  color: #666;
+}
+
+.selector-item.active .item-name {
+  color: #fff;
 }
 
 /* 添加按钮样式 */
 .selector-item.add-btn {
   background: #fff;
   border: 2rpx dashed #ccc;
+}
+
+.selector-item.add-btn .item-icon,
+.selector-item.add-btn .item-name {
   color: #999;
 }
 
 .selector-item.add-btn:active {
   background: #f5f5f5;
   border-color: #D32F2F;
+}
+
+.selector-item.add-btn:active .item-icon,
+.selector-item.add-btn:active .item-name {
   color: #D32F2F;
 }
 
-/* 自定义输入框样式 */
-.custom-input-box {
-  margin-top: 24rpx;
-  padding: 24rpx;
-  background: linear-gradient(135deg, #fff9f9, #ffffff);
-  border: 2rpx solid rgba(211, 47, 47, 0.2);
-  border-radius: 16rpx;
-}
-
-.custom-input-header {
+/* 弹窗遮罩 */
+.popup-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20rpx;
+  justify-content: center;
+  padding: 60rpx;
 }
 
-.custom-title {
-  font-size: 28rpx;
+.popup-mask.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 弹窗内容 */
+.popup-content {
+  width: 100%;
+  max-width: 560rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  transform: scale(0.9) translateY(20rpx);
+  opacity: 0;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.popup-content.show {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* 弹窗头部 */
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx 32rpx 20rpx;
+}
+
+.popup-title {
+  font-size: 34rpx;
   font-weight: 600;
   color: #333;
 }
 
-.custom-close {
-  font-size: 32rpx;
-  color: #999;
-  padding: 8rpx;
-}
-
-.custom-input-row {
+.popup-close {
+  width: 56rpx;
+  height: 56rpx;
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: #999;
+  border-radius: 50%;
+  transition: all 0.2s;
 }
 
-.custom-input-field {
-  flex: 1;
-  height: 72rpx;
-  padding: 0 20rpx;
-  background: #fff;
+.popup-close:active {
+  background: #f5f5f5;
+  color: #666;
+}
+
+/* 弹窗主体 */
+.popup-body {
+  padding: 20rpx 32rpx 32rpx;
+}
+
+.popup-input {
+  width: 100%;
+  height: 96rpx;
+  padding: 0 24rpx;
+  background: #f8f8f8;
   border: 2rpx solid #eee;
-  border-radius: 8rpx;
-  font-size: 28rpx;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  color: #333;
+  box-sizing: border-box;
 }
 
-.custom-input-field:focus {
+.popup-input:focus {
+  background: #fff;
   border-color: #D32F2F;
+}
+
+.popup-hint {
+  margin-top: 20rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 弹窗底部按钮 */
+.popup-footer {
+  display: flex;
+  padding: 0 32rpx 32rpx;
+  gap: 20rpx;
+}
+
+.popup-btn {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 500;
+  border-radius: 44rpx;
+  transition: all 0.2s;
+}
+
+.popup-btn.cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.popup-btn.cancel:active {
+  background: #e8e8e8;
+}
+
+.popup-btn.confirm {
+  background: linear-gradient(135deg, #D32F2F, #FF6B6B);
+  color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(211, 47, 47, 0.3);
+}
+
+.popup-btn.confirm:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(211, 47, 47, 0.2);
 }
 
 /* 结果卡片特殊样式 */

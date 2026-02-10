@@ -3,12 +3,13 @@
  */
 const { getUserInfo, syncUserToCloud } = require('../../utils/user.js')
 
+// 默认头像地址（微信官方默认头像）
+const DEFAULT_AVATAR_URL = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+
 Page({
   data: {
     tempAvatarUrl: '',
-    tempNickName: '',
-    showAvatarPopup: false,
-    wxAvatarUrl: ''
+    tempNickName: ''
   },
 
   onLoad() {
@@ -28,71 +29,39 @@ Page({
         tempAvatarUrl: userInfo.avatarUrl && !userInfo.avatarUrl.includes('132') 
           ? userInfo.avatarUrl 
           : '',
-        tempNickName: isDefaultNick ? '' : nickName,
-        wxAvatarUrl: userInfo.avatarUrl || ''
+        tempNickName: isDefaultNick ? '' : nickName
       })
     }
   },
 
-  // 显示头像选择弹窗
-  chooseAvatar() {
-    this.setData({ showAvatarPopup: true })
-  },
-
-  // 隐藏头像选择弹窗
-  hideAvatarPopup() {
-    this.setData({ showAvatarPopup: false })
-  },
-
-  // 阻止事件冒泡
-  stopPropagation() {
-    // 什么都不做，只是阻止冒泡
-  },
-
-  // 选择微信头像
-  onChooseWxAvatar(e) {
+  // 选择头像 - 微信官方推荐方式
+  // 用户点击头像行后，微信会弹出头像选择器
+  onChooseAvatar(e) {
     const { avatarUrl } = e.detail
+    // 头像链接是临时路径，需要上传到云存储
     this.setData({ 
-      tempAvatarUrl: avatarUrl, 
-      showAvatarPopup: false 
-    })
-  },
-
-  // 从相册选择
-  chooseFromAlbum() {
-    wx.chooseMedia({
-      count: 1,
-      mediaType: ['image'],
-      sourceType: ['album'],
-      success: (res) => {
-        const tempFilePath = res.tempFiles[0].tempFilePath
-        this.setData({ 
-          tempAvatarUrl: tempFilePath, 
-          showAvatarPopup: false 
-        })
-      }
-    })
-  },
-
-  // 拍照
-  takePhoto() {
-    wx.chooseMedia({
-      count: 1,
-      mediaType: ['image'],
-      sourceType: ['camera'],
-      success: (res) => {
-        const tempFilePath = res.tempFiles[0].tempFilePath
-        this.setData({ 
-          tempAvatarUrl: tempFilePath, 
-          showAvatarPopup: false 
-        })
-      }
+      tempAvatarUrl: avatarUrl 
     })
   },
 
   // 输入昵称
   onNickNameInput(e) {
     this.setData({ tempNickName: e.detail.value })
+  },
+
+  // 上传头像到云存储
+  async uploadAvatarToCloud(tempFilePath) {
+    try {
+      const cloudPath = `avatars/${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`
+      const res = await wx.cloud.uploadFile({
+        cloudPath,
+        filePath: tempFilePath
+      })
+      return res.fileID
+    } catch (err) {
+      console.error('头像上传失败:', err)
+      throw err
+    }
   },
 
   // 保存个人资料
@@ -108,11 +77,18 @@ Page({
     try {
       wx.showLoading({ title: '保存中...' })
       
+      let finalAvatarUrl = tempAvatarUrl
+      
+      // 如果头像以 http://tmp/ 开头，说明是临时文件，需要上传到云存储
+      if (tempAvatarUrl && tempAvatarUrl.startsWith('http://tmp/')) {
+        finalAvatarUrl = await this.uploadAvatarToCloud(tempAvatarUrl)
+      }
+      
       // 更新本地存储
       const userInfo = {
         ...getUserInfo(),
         nickName: finalNickName,
-        avatarUrl: tempAvatarUrl || getUserInfo()?.avatarUrl
+        avatarUrl: finalAvatarUrl || getUserInfo()?.avatarUrl
       }
       wx.setStorageSync('userInfo', userInfo)
 

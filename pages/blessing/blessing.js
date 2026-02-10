@@ -17,6 +17,8 @@ Page({
     customRecipient: '',
     showCustomFestivalInput: false,
     showCustomRecipientInput: false,
+    animatingFestival: false,
+    animatingRecipient: false,
     generatedBlessing: '',
     loading: false,
     usageInfo: {},
@@ -156,18 +158,31 @@ Page({
 
   // 显示/隐藏自定义节日输入
   showAddFestivalInput() {
-    this.setData({ showCustomFestivalInput: true })
+    this.setData({ showCustomFestivalInput: true, animatingFestival: true })
   },
   hideAddFestivalInput() {
-    this.setData({ showCustomFestivalInput: false, customFestival: '' })
+    this.setData({ showCustomFestivalInput: false })
+    // 等待动画结束后移除节点
+    setTimeout(() => {
+      this.setData({ animatingFestival: false, customFestival: '' })
+    }, 300)
   },
 
   // 显示/隐藏自定义对象输入
   showAddRecipientInput() {
-    this.setData({ showCustomRecipientInput: true })
+    this.setData({ showCustomRecipientInput: true, animatingRecipient: true })
   },
   hideAddRecipientInput() {
-    this.setData({ showCustomRecipientInput: false, customRecipient: '' })
+    this.setData({ showCustomRecipientInput: false })
+    // 等待动画结束后移除节点
+    setTimeout(() => {
+      this.setData({ animatingRecipient: false, customRecipient: '' })
+    }, 300)
+  },
+
+  // 阻止事件冒泡
+  stopPropagation() {
+    // 什么都不做，只是阻止冒泡
   },
 
   // 自定义节日输入

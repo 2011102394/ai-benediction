@@ -5,62 +5,96 @@ page {
 }
 
 .container {
-  padding-top: 20rpx;
+  padding: 30rpx;
 }
 
-/* 编辑行 */
+/* 表单卡片 */
+.form-card {
+  background: #fff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 编辑行 - 基础样式 */
 .edit-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30rpx;
+  height: 120rpx;
+  padding: 0 30rpx;
   background: #fff;
   border-bottom: 2rpx solid #f5f5f5;
+  box-sizing: border-box;
+}
+
+.edit-row:last-child {
+  border-bottom: none;
+}
+
+/* 头像行 - 微信官方推荐的 chooseAvatar 按钮样式 */
+.avatar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100vw !important;
+  margin: 0;
+  height: 120rpx;
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  line-height: 1;
+  font-size: inherit;
+  color: inherit;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.avatar-row::after {
+  border: none;
 }
 
 .row-label {
   font-size: 32rpx;
   color: #333;
+  font-weight: 500;
 }
 
 .row-value {
   display: flex;
   align-items: center;
-  gap: 20rpx;
+  gap: 16rpx;
 }
 
 .row-avatar {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 16rpx;
-  object-fit: cover;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 12rpx;
   background: #f5f5f5;
+  margin-right:30rpx;
 }
 
 .row-avatar-empty {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 16rpx;
-  background: #f5f5f5;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 12rpx;
+  background: #f0f0f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48rpx;
+  font-size: 40rpx;
 }
 
 .arrow {
-  font-size: 36rpx;
+  font-size: 40rpx;
   color: #ccc;
+  margin-left: 8rpx;
 }
 
-/* 昵称行特殊样式 */
-.nickname-row {
-  padding: 20rpx 30rpx;
-}
-
+/* 昵称输入框 */
 .nickname-input {
   flex: 1;
-  height: 80rpx;
+  height: 72rpx;
   font-size: 32rpx;
   color: #333;
   text-align: right;
@@ -68,29 +102,31 @@ page {
 }
 
 .nickname-input::placeholder {
-  color: #ccc;
+  color: #bbb;
 }
 
 /* 提示文字 */
 .edit-hint {
-  padding: 20rpx 30rpx;
+  padding: 24rpx 30rpx;
   font-size: 26rpx;
   color: #999;
 }
 
 /* 确定按钮 */
 .confirm-btn {
-  margin: 60rpx 30rpx;
+  width: 100% !important;
+  margin: 60rpx 0 30rpx;
   height: 96rpx;
-  background: #f5a5b5;
-  color: rgba(255, 255, 255, 0.8);
+   background: linear-gradient(135deg, #D32F2F 0%, #FF6B6B 50%, #FF8A80 100%);
+  color: #fff;
   font-size: 34rpx;
-  font-weight: 500;
+  font-weight: 600;
   border-radius: 48rpx;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(236, 64, 122, 0.35);
   transition: all 0.3s ease;
 }
 
@@ -98,109 +134,9 @@ page {
   border: none;
 }
 
-.confirm-btn.active {
-  background: #ec407a;
-  color: #fff;
+.confirm-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(236, 64, 122, 0.25);
 }
 
-/* 头像选择弹窗 */
-.avatar-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.3s ease;
-}
 
-.avatar-popup.show {
-  visibility: visible;
-  opacity: 1;
-}
-
-.popup-mask {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.popup-content {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #f5f5f5;
-  border-radius: 32rpx 32rpx 0 0;
-  padding: 20rpx 0 40rpx;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
-}
-
-.avatar-popup.show .popup-content {
-  transform: translateY(0);
-}
-
-.popup-title {
-  text-align: center;
-  font-size: 28rpx;
-  color: #999;
-  padding: 30rpx;
-  border-bottom: 2rpx solid #e5e5e5;
-}
-
-.popup-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32rpx;
-  background: #fff;
-  font-size: 32rpx;
-  color: #333;
-  border-bottom: 2rpx solid #f5f5f5;
-}
-
-.popup-item:last-of-type {
-  border-bottom: none;
-}
-
-.popup-item button {
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
-  line-height: 1.5;
-  font-size: 32rpx;
-  color: #333;
-}
-
-.popup-item button::after {
-  border: none;
-}
-
-.wx-avatar {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 16rpx;
-}
-
-.popup-divider {
-  height: 16rpx;
-  background: #f5f5f5;
-}
-
-.popup-cancel {
-  margin: 20rpx 20rpx 0;
-  padding: 32rpx;
-  background: #fff;
-  border-radius: 24rpx;
-  text-align: center;
-  font-size: 34rpx;
-  color: #333;
-  font-weight: 500;
-}

@@ -9,44 +9,29 @@
     <view class="loading-small" wx:if="{{festivals.length === 0}}">
       <text>加载中...</text>
     </view>
-    <view class="selector" wx:else>
-      <view 
-        class="selector-item {{selectedFestival === item.id ? 'active' : ''}}"
-        wx:for="{{festivals}}"
-        wx:key="id"
-        data-id="{{item.id}}"
-        data-name="{{item.name}}"
-        data-theme="{{item.theme}}"
-        bindtap="selectFestival"
-        style="{{selectedFestival === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
-      >
-        <text>{{item.icon}}</text>
-        <text>{{item.name}}</text>
+    <scroll-view class="selector-scroll" scroll-y enhanced show-scrollbar="{{false}}" wx:else>
+      <view class="selector-grid">
+        <view 
+          class="selector-item {{selectedFestival === item.id ? 'active' : ''}}"
+          wx:for="{{festivals}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+          data-theme="{{item.theme}}"
+          bindtap="selectFestival"
+          style="{{selectedFestival === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
+        >
+          <text class="item-icon">{{item.icon}}</text>
+          <text class="item-name">{{item.name}}</text>
+        </view>
+        <!-- 添加自定义节日按钮 -->
+        <view class="selector-item add-btn" bindtap="showAddFestivalInput">
+          <text class="item-icon">➕</text>
+          <text class="item-name">添加</text>
+        </view>
       </view>
-      <!-- 添加自定义节日按钮 -->
-      <view class="selector-item add-btn" bindtap="showAddFestivalInput">
-        <text>➕</text>
-        <text>添加</text>
-      </view>
-    </view>
+    </scroll-view>
     
-    <!-- 自定义节日输入 -->
-    <view class="custom-input-box" wx:if="{{showCustomFestivalInput}}">
-      <view class="custom-input-header">
-        <text class="custom-title">添加自定义节日</text>
-        <text class="custom-close" bindtap="hideAddFestivalInput">✕</text>
-      </view>
-      <view class="custom-input-row">
-        <input 
-          class="custom-input-field"
-          placeholder="输入节日名称，如：公司周年庆" 
-          value="{{customFestival}}"
-          bindinput="onCustomFestivalInput"
-          focus="{{showCustomFestivalInput}}"
-        />
-        <view class="btn-add" bindtap="addCustomFestival">确认添加</view>
-      </view>
-    </view>
   </view>
 
   <!-- 祝福对象选择 -->
@@ -59,43 +44,28 @@
     <view class="loading-small" wx:if="{{recipients.length === 0}}">
       <text>加载中...</text>
     </view>
-    <view class="selector" wx:else>
-      <view 
-        class="selector-item {{selectedRecipient === item.id ? 'active' : ''}}"
-        wx:for="{{recipients}}"
-        wx:key="id"
-        data-id="{{item.id}}"
-        data-name="{{item.name}}"
-        bindtap="selectRecipient"
-        style="{{selectedRecipient === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
-      >
-        <text>{{item.icon}}</text>
-        <text>{{item.name}}</text>
+    <scroll-view class="selector-scroll" scroll-y enhanced show-scrollbar="{{false}}" wx:else>
+      <view class="selector-grid">
+        <view 
+          class="selector-item {{selectedRecipient === item.id ? 'active' : ''}}"
+          wx:for="{{recipients}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+          bindtap="selectRecipient"
+          style="{{selectedRecipient === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
+        >
+          <text class="item-icon">{{item.icon}}</text>
+          <text class="item-name">{{item.name}}</text>
+        </view>
+        <!-- 添加自定义对象按钮 -->
+        <view class="selector-item add-btn" bindtap="showAddRecipientInput">
+          <text class="item-icon">➕</text>
+          <text class="item-name">添加</text>
+        </view>
       </view>
-      <!-- 添加自定义对象按钮 -->
-      <view class="selector-item add-btn" bindtap="showAddRecipientInput">
-        <text>➕</text>
-        <text>添加</text>
-      </view>
-    </view>
+    </scroll-view>
     
-    <!-- 自定义对象输入 -->
-    <view class="custom-input-box" wx:if="{{showCustomRecipientInput}}">
-      <view class="custom-input-header">
-        <text class="custom-title">添加自定义对象</text>
-        <text class="custom-close" bindtap="hideAddRecipientInput">✕</text>
-      </view>
-      <view class="custom-input-row">
-        <input 
-          class="custom-input-field"
-          placeholder="输入对象名称，如：合伙人" 
-          value="{{customRecipient}}"
-          bindinput="onCustomRecipientInput"
-          focus="{{showCustomRecipientInput}}"
-        />
-        <view class="btn-add" bindtap="addCustomRecipient">确认添加</view>
-      </view>
-    </view>
   </view>
 
   <!-- 生成按钮 -->
@@ -159,5 +129,55 @@
   <view class="loading" wx:if="{{loading}}">
     <view class="loading-icon">✨</view>
     <text class="loading-text">AI正在生成中...</text>
+  </view>
+
+  <!-- 自定义节日弹窗 -->
+  <view class="popup-mask {{showCustomFestivalInput ? 'show' : ''}}" bindtap="hideAddFestivalInput" wx:if="{{showCustomFestivalInput || animatingFestival}}">
+    <view class="popup-content {{showCustomFestivalInput ? 'show' : ''}}" catchtap="stopPropagation">
+      <view class="popup-header">
+        <text class="popup-title">添加自定义节日</text>
+        <view class="popup-close" bindtap="hideAddFestivalInput">
+          <text>✕</text>
+        </view>
+      </view>
+      <view class="popup-body">
+        <input 
+          class="popup-input"
+          placeholder="请输入节日名称" 
+          value="{{customFestival}}"
+          bindinput="onCustomFestivalInput"
+          focus="{{showCustomFestivalInput}}"
+        />
+      </view>
+      <view class="popup-footer">
+        <view class="popup-btn cancel" bindtap="hideAddFestivalInput">取消</view>
+        <view class="popup-btn confirm" bindtap="addCustomFestival">确认添加</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 自定义祝福对象弹窗 -->
+  <view class="popup-mask {{showCustomRecipientInput ? 'show' : ''}}" bindtap="hideAddRecipientInput" wx:if="{{showCustomRecipientInput || animatingRecipient}}">
+    <view class="popup-content {{showCustomRecipientInput ? 'show' : ''}}" catchtap="stopPropagation">
+      <view class="popup-header">
+        <text class="popup-title">添加自定义对象</text>
+        <view class="popup-close" bindtap="hideAddRecipientInput">
+          <text>✕</text>
+        </view>
+      </view>
+      <view class="popup-body">
+        <input 
+          class="popup-input"
+          placeholder="请输入对象名称" 
+          value="{{customRecipient}}"
+          bindinput="onCustomRecipientInput"
+          focus="{{showCustomRecipientInput}}"
+        />
+      </view>
+      <view class="popup-footer">
+        <view class="popup-btn cancel" bindtap="hideAddRecipientInput">取消</view>
+        <view class="popup-btn confirm" bindtap="addCustomRecipient">确认添加</view>
+      </view>
+    </view>
   </view>
 </view>
