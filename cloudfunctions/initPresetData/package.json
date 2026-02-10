@@ -1,0 +1,9 @@
+{
+  "name": "initPresetData",
+  "version": "1.0.0",
+  "description": "初始化预设节日和祝福对象数据",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

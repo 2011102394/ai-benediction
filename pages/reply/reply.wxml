@@ -1,0 +1,122 @@
+<view class="container">
+  <!-- 节日选择 -->
+  <view class="card">
+    <view class="card-title">
+      <view class="card-title-icon" style="background: {{styles.gradient || 'linear-gradient(180deg, #D32F2F, #FF6B6B)'}}"></view>
+      <text>选择节日</text>
+    </view>
+    <!-- 加载中 -->
+    <view class="loading-small" wx:if="{{festivals.length === 0}}">
+      <text>加载中...</text>
+    </view>
+    <view class="selector" wx:else>
+      <view 
+        class="selector-item {{selectedFestival === item.id ? 'active' : ''}}"
+        wx:for="{{festivals}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        data-name="{{item.name}}"
+        data-theme="{{item.theme}}"
+        bindtap="selectFestival"
+        style="{{selectedFestival === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
+      >
+        <text>{{item.icon}}</text>
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 回复对象选择 -->
+  <view class="card">
+    <view class="card-title">
+      <view class="card-title-icon" style="background: {{styles.gradient || 'linear-gradient(180deg, #D32F2F, #FF6B6B)'}}"></view>
+      <text>回复对象</text>
+    </view>
+    <!-- 加载中 -->
+    <view class="loading-small" wx:if="{{recipients.length === 0}}">
+      <text>加载中...</text>
+    </view>
+    <view class="selector" wx:else>
+      <view 
+        class="selector-item {{selectedRecipient === item.id ? 'active' : ''}}"
+        wx:for="{{recipients}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        data-name="{{item.name}}"
+        bindtap="selectRecipient"
+        style="{{selectedRecipient === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
+      >
+        <text>{{item.icon}}</text>
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 收到的祝福语输入 -->
+  <view class="card">
+    <view class="card-title">
+      <view class="card-title-icon" style="background: {{styles.gradient || 'linear-gradient(180deg, #D32F2F, #FF6B6B)'}}"></view>
+      <text>收到的祝福语</text>
+    </view>
+    <textarea 
+      class="blessing-input"
+      placeholder="请粘贴您收到的祝福语，AI将为您生成得体的回复..."
+      value="{{receivedBlessing}}"
+      bindinput="onReceivedBlessingInput"
+      maxlength="500"
+    />
+  </view>
+
+  <!-- 生成按钮 -->
+  <button 
+    class="generate-btn {{!canGenerate ? 'disabled' : ''}}"
+    bindtap="generateReply"
+    disabled="{{!canGenerate || loading}}"
+  >
+    <text wx:if="{{!loading}}">💬 生成回复语</text>
+    <text wx:else>生成中...</text>
+  </button>
+
+  <!-- 使用次数提示 -->
+  <view class="usage-hint">
+    <text>{{usageInfo.message || '今日可用5次'}}</text>
+    <text wx:if="{{usageInfo.inviteRemaining > 0}}" class="invite-count">（邀请奖励: {{usageInfo.inviteRemaining}}次）</text>
+  </view>
+
+  <!-- 未登录引导 -->
+  <view class="login-section" wx:if="{{usageInfo.type === 'need_login'}}">
+    <view class="login-hint">💡 免费次数已用完</view>
+    <view class="login-desc">登录后每天可享10次免费机会，还能邀请好友获取更多次数！</view>
+    <button class="login-btn" bindtap="goToLogin">
+      <text>🔐</text>
+      <text>立即登录获取更多次数</text>
+    </button>
+  </view>
+
+  <!-- 邀请好友获取次数 -->
+  <view class="invite-section" wx:if="{{usageInfo.type === 'need_invite'}}">
+    <view class="invite-hint">💡 今日免费次数已用完</view>
+    <view class="invite-desc">邀请好友，每邀请一人可获得2次额外机会（永久有效）</view>
+    <button class="invite-btn" open-type="share">
+      <text>🎁</text>
+      <text>邀请好友获取次数</text>
+    </button>
+  </view>
+
+  <!-- 生成结果 -->
+  <view class="result-card" wx:if="{{generatedReply}}">
+    <view class="result-text">{{generatedReply}}</view>
+    <view class="result-actions">
+      <view class="action-btn copy" bindtap="copyReply">
+        <text>📋</text>
+        <text>复制</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载动画 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-icon">💬</view>
+    <text class="loading-text">AI正在思考回复...</text>
+  </view>
+</view>

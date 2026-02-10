@@ -1,0 +1,9 @@
+{
+  "name": "migrateHistory",
+  "version": "1.0.0",
+  "description": "迁移本地历史数据到云端",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

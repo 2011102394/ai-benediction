@@ -1,0 +1,216 @@
+/**app.wxss**/
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+  color: #333;
+  background-color: #f7f7f7;
+}
+
+/* 通用容器 */
+.container {
+  padding: 20rpx 30rpx;
+}
+
+/* 卡片样式 */
+.card {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.card-title-icon {
+  width: 8rpx;
+  height: 32rpx;
+  background: linear-gradient(180deg, #D32F2F, #FF6B6B);
+  border-radius: 4rpx;
+  margin-right: 16rpx;
+}
+
+/* 选择器样式 */
+.selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.selector-item {
+  padding: 16rpx 32rpx;
+  background: #f5f5f5;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.selector-item.active {
+  background: linear-gradient(135deg, #D32F2F, #FF6B6B);
+  color: #fff;
+}
+
+/* 自定义输入框 */
+.custom-input {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+  padding: 20rpx;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+}
+
+.custom-input input {
+  flex: 1;
+  height: 60rpx;
+  font-size: 28rpx;
+}
+
+.custom-input .btn-add {
+  padding: 12rpx 24rpx;
+  background: #D32F2F;
+  color: #fff;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+}
+
+/* 生成按钮 */
+.generate-btn {
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, #D32F2F, #FF6B6B);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40rpx;
+  box-shadow: 0 8rpx 24rpx rgba(211, 47, 47, 0.3);
+}
+
+.generate-btn::after {
+  border: none;
+}
+
+.generate-btn.disabled {
+  background: #ccc;
+  box-shadow: none;
+}
+
+/* 结果展示区域 */
+.result-card {
+  background: linear-gradient(135deg, #fff9f9, #ffffff);
+  border: 2rpx solid rgba(211, 47, 47, 0.1);
+  border-radius: 16rpx;
+  padding: 40rpx;
+  margin-top: 30rpx;
+  position: relative;
+}
+
+.result-text {
+  font-size: 30rpx;
+  line-height: 1.8;
+  color: #333;
+}
+
+.result-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30rpx;
+  gap: 20rpx;
+}
+
+.action-btn {
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.action-btn.copy {
+  background: #f5f5f5;
+  color: #666;
+}
+
+
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+  color: #999;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+}
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  background: rgba(211, 47, 47, 0.1);
+  color: #D32F2F;
+  font-size: 24rpx;
+  border-radius: 8rpx;
+  margin-right: 12rpx;
+}
+
+/* 加载动画 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.loading-text {
+  margin-left: 16rpx;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 激励视频按钮 */
+.ad-btn {
+  padding: 20rpx 40rpx;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #333;
+  font-size: 28rpx;
+  font-weight: 600;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+}
+
+/* 使用次数提示 */
+.usage-hint {
+  text-align: center;
+  padding: 20rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.usage-hint .highlight {
+  color: #D32F2F;
+  font-weight: 600;
+}

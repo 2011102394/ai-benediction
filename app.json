@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/blessing/blessing",
+    "pages/reply/reply",
+    "pages/history/history",
+    "pages/profile/profile",
+    "pages/profileEdit/profileEdit"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#D32F2F",
+    "navigationBarTitleText": "吉语集",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#D32F2F",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/blessing/blessing",
+        "text": "祝福语"
+      },
+      {
+        "pagePath": "pages/reply/reply",
+        "text": "回复语"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "cloud": true
+}

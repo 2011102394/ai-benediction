@@ -1,0 +1,109 @@
+<view class="container">
+  <!-- 用户信息卡片（点击进入编辑） -->
+  <view class="user-card" bindtap="goToEditProfile">
+    <view class="user-avatar">
+      <image wx:if="{{isLogin && userInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+      <view wx:else class="avatar-placeholder">
+        <text class="avatar-icon">👤</text>
+      </view>
+    </view>
+    <view class="user-info">
+      <text class="user-name">{{isLogin && userInfo ? (userInfo.nickName === null || userInfo.nickName === undefined || userInfo.nickName === '' ? '微信用户' : userInfo.nickName) : '未登录'}}</text>
+      <text class="user-status">{{isLogin ? '已登录用户' : '游客用户'}}</text>
+    </view>
+    <view wx:if="{{isLogin}}" class="login-badge">✓</view>
+    <text class="edit-arrow" wx:if="{{isLogin}}">›</text>
+  </view>
+
+  <!-- 提示完善资料（已登录但未设置昵称时显示） -->
+  <view class="complete-tip" wx:if="{{isLogin && needEditProfile}}" bindtap="goToEditProfile">
+    <text class="tip-text">⚠️ 点击完善个人信息</text>
+    <text class="tip-arrow">›</text>
+  </view>
+
+  <!-- 使用次数统计 -->
+  <view class="stats-card">
+    <view class="stats-title">📊 今日使用统计</view>
+    <view class="stats-grid">
+      <view class="stats-item">
+        <text class="stats-value">{{usageStats.freeRemaining || 0}}</text>
+        <text class="stats-label">免费次数</text>
+        <text class="stats-desc">/ {{usageStats.maxFree || 5}}次</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value">{{usageStats.inviteRemaining || 0}}</text>
+        <text class="stats-label">邀请奖励</text>
+        <text class="stats-desc">永久有效</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value">{{usageStats.totalUsed || 0}}</text>
+        <text class="stats-label">今日已用</text>
+        <text class="stats-desc">次数</text>
+      </view>
+    </view>
+    <view class="stats-hint" wx:if="{{!isLogin}}">
+      💡 登录后每天可享10次免费机会
+    </view>
+    <view class="stats-hint" wx:else>
+      ⏰ {{usageStats.remainingTime || '24小时后重置'}}
+    </view>
+  </view>
+
+  <!-- 登录特权说明 -->
+  <view class="privilege-card" wx:if="{{!isLogin}}">
+    <view class="privilege-title">🔓 登录特权</view>
+    <view class="privilege-list">
+      <view class="privilege-item">
+        <text class="privilege-icon">✨</text>
+        <text class="privilege-text">每天10次免费机会（游客仅5次）</text>
+      </view>
+      <view class="privilege-item">
+        <text class="privilege-icon">🎁</text>
+        <text class="privilege-text">邀请好友各得2次奖励（永久有效）</text>
+      </view>
+      <view class="privilege-item">
+        <text class="privilege-icon">☁️</text>
+        <text class="privilege-text">数据云端同步，换设备不丢失</text>
+      </view>
+    </view>
+    <button class="login-btn" bindtap="handleLogin">
+      <text>🔐</text>
+      <text>微信一键登录</text>
+    </button>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="action-list">
+    <view class="action-title">🎯 快捷操作</view>
+    
+    <view class="action-item" bindtap="goToHistory">
+      <text class="action-icon">📜</text>
+      <text class="action-text">历史记录</text>
+      <text class="action-arrow">›</text>
+    </view>
+    
+    <button class="action-item" open-type="share" wx:if="{{isLogin}}">
+      <text class="action-icon">🎁</text>
+      <text class="action-text">邀请好友</text>
+      <text class="action-arrow">›</text>
+    </button>
+    
+    <view class="action-item" bindtap="goToBlessing">
+      <text class="action-icon">✨</text>
+      <text class="action-text">生成祝福</text>
+      <text class="action-arrow">›</text>
+    </view>
+    
+    <view class="action-item" bindtap="handleLogout" wx:if="{{isLogin}}">
+      <text class="action-icon">🚪</text>
+      <text class="action-text">退出登录</text>
+      <text class="action-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 调试功能（开发环境显示） -->
+  <view class="debug-section">
+    <view class="debug-title">⚙️ 调试选项</view>
+    <button class="debug-btn" bindtap="handleReset">重置使用次数</button>
+  </view>
+</view>

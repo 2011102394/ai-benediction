@@ -1,0 +1,206 @@
+/** 个人信息编辑页面样式 **/
+
+page {
+  background: #f5f5f5;
+}
+
+.container {
+  padding-top: 20rpx;
+}
+
+/* 编辑行 */
+.edit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx;
+  background: #fff;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+
+.row-label {
+  font-size: 32rpx;
+  color: #333;
+}
+
+.row-value {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.row-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 16rpx;
+  object-fit: cover;
+  background: #f5f5f5;
+}
+
+.row-avatar-empty {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 16rpx;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+}
+
+.arrow {
+  font-size: 36rpx;
+  color: #ccc;
+}
+
+/* 昵称行特殊样式 */
+.nickname-row {
+  padding: 20rpx 30rpx;
+}
+
+.nickname-input {
+  flex: 1;
+  height: 80rpx;
+  font-size: 32rpx;
+  color: #333;
+  text-align: right;
+  margin-left: 40rpx;
+}
+
+.nickname-input::placeholder {
+  color: #ccc;
+}
+
+/* 提示文字 */
+.edit-hint {
+  padding: 20rpx 30rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 确定按钮 */
+.confirm-btn {
+  margin: 60rpx 30rpx;
+  height: 96rpx;
+  background: #f5a5b5;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 34rpx;
+  font-weight: 500;
+  border-radius: 48rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.confirm-btn::after {
+  border: none;
+}
+
+.confirm-btn.active {
+  background: #ec407a;
+  color: #fff;
+}
+
+/* 头像选择弹窗 */
+.avatar-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.avatar-popup.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f5f5f5;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 20rpx 0 40rpx;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.avatar-popup.show .popup-content {
+  transform: translateY(0);
+}
+
+.popup-title {
+  text-align: center;
+  font-size: 28rpx;
+  color: #999;
+  padding: 30rpx;
+  border-bottom: 2rpx solid #e5e5e5;
+}
+
+.popup-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx;
+  background: #fff;
+  font-size: 32rpx;
+  color: #333;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+
+.popup-item:last-of-type {
+  border-bottom: none;
+}
+
+.popup-item button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1.5;
+  font-size: 32rpx;
+  color: #333;
+}
+
+.popup-item button::after {
+  border: none;
+}
+
+.wx-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+}
+
+.popup-divider {
+  height: 16rpx;
+  background: #f5f5f5;
+}
+
+.popup-cancel {
+  margin: 20rpx 20rpx 0;
+  padding: 32rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  text-align: center;
+  font-size: 34rpx;
+  color: #333;
+  font-weight: 500;
+}
