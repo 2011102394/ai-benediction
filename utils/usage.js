@@ -28,9 +28,9 @@ function initUsage() {
     wx.setStorageSync('usage_init_date', today)
   }
   
-  // 确保免费次数有值
-  const freeCount = wx.getStorageSync('free_count')
-  if (freeCount === undefined || freeCount === null || freeCount === '') {
+  // 确保免费次数有值且不为负数
+  let freeCount = wx.getStorageSync('free_count')
+  if (freeCount === undefined || freeCount === null || freeCount === '' || freeCount < 0) {
     wx.setStorageSync('free_count', getMaxFreeCount())
   }
 }
@@ -42,9 +42,15 @@ function checkUsage() {
   initUsage()
   
   const loggedIn = isLoggedIn()
-  const freeCount = wx.getStorageSync('free_count') || 0
+  let freeCount = wx.getStorageSync('free_count') || 0
   const inviteCount = wx.getStorageSync('invite_count') || 0
   const maxCount = getMaxFreeCount()
+  
+  // 确保 freeCount 不为负数
+  if (freeCount < 0) {
+    freeCount = 0
+    wx.setStorageSync('free_count', 0)
+  }
 
   // 优先使用免费次数
   if (freeCount > 0) {
@@ -105,6 +111,11 @@ function checkUsage() {
 function consumeUsage(type = 'free') {
   if (type === 'free') {
     let count = wx.getStorageSync('free_count') || 0
+    // 确保 count 不为负数
+    if (count < 0) {
+      count = 0
+      wx.setStorageSync('free_count', 0)
+    }
     if (count > 0) {
       wx.setStorageSync('free_count', count - 1)
       // 登录用户同步到云端
@@ -199,8 +210,14 @@ function getUsageStats() {
   initUsage()
   const loggedIn = isLoggedIn()
   const maxFree = getMaxFreeCount()
-  const freeCount = wx.getStorageSync('free_count') || 0
+  let freeCount = wx.getStorageSync('free_count') || 0
   const inviteCount = wx.getStorageSync('invite_count') || 0
+  
+  // 确保 freeCount 不为负数
+  if (freeCount < 0) {
+    freeCount = 0
+    wx.setStorageSync('free_count', 0)
+  }
   
   const freeUsed = maxFree - freeCount
   const totalRemaining = freeCount + inviteCount
@@ -209,9 +226,9 @@ function getUsageStats() {
     isLogin: loggedIn,
     maxFree: maxFree,
     freeRemaining: freeCount,
-    freeUsed: freeUsed,
+    freeUsed: freeUsed >= 0 ? freeUsed : maxFree,
     inviteRemaining: inviteCount,
-    totalUsed: freeUsed,
+    totalUsed: freeUsed >= 0 ? freeUsed : maxFree,
     totalRemaining: totalRemaining,
     remainingTime: getRemainingTime(),
     canInvite: loggedIn

@@ -24,10 +24,12 @@ Page({
     usageInfo: {},
     theme: 'spring',
     styles: {},
-    canGenerate: true
+    canGenerate: true,
+    isLogin: false
   },
 
   onLoad(options) {
+    this.setData({ isLogin: isLoggedIn() })
     this.loadFestivals()
     this.loadRecipients()
     this.checkUserUsage()
@@ -37,6 +39,12 @@ Page({
     if (options && options.inviter) {
       this.handleInvite(options.inviter)
     }
+  },
+
+  onShow() {
+    // 每次显示页面时更新登录状态
+    this.setData({ isLogin: isLoggedIn() })
+    this.checkUserUsage()
   },
 
   // 获取用户OpenID
@@ -69,10 +77,6 @@ Page({
       query: openId ? `inviter=${openId}` : '',
       imageUrl: '/images/share-cover.png'
     }
-  },
-
-  onShow() {
-    this.checkUserUsage()
   },
 
   // 加载节日列表
@@ -158,6 +162,20 @@ Page({
 
   // 显示/隐藏自定义节日输入
   showAddFestivalInput() {
+    // 检查是否登录
+    if (!isLoggedIn()) {
+      wx.showModal({
+        title: '需要登录',
+        content: '登录后才能添加自定义节日哦！',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            this.goToLogin()
+          }
+        }
+      })
+      return
+    }
     this.setData({ showCustomFestivalInput: true, animatingFestival: true })
   },
   hideAddFestivalInput() {
@@ -170,6 +188,20 @@ Page({
 
   // 显示/隐藏自定义对象输入
   showAddRecipientInput() {
+    // 检查是否登录
+    if (!isLoggedIn()) {
+      wx.showModal({
+        title: '需要登录',
+        content: '登录后才能添加自定义对象哦！',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            this.goToLogin()
+          }
+        }
+      })
+      return
+    }
     this.setData({ showCustomRecipientInput: true, animatingRecipient: true })
   },
   hideAddRecipientInput() {
@@ -217,6 +249,18 @@ Page({
           showCustomFestivalInput: false
         })
         this.loadFestivals()
+      } else if (res.result.code === -2) {
+        // 未登录
+        wx.showModal({
+          title: '需要登录',
+          content: res.result.message,
+          confirmText: '去登录',
+          success: (res) => {
+            if (res.confirm) {
+              this.goToLogin()
+            }
+          }
+        })
       } else {
         wx.showToast({ title: res.result.message, icon: 'none' })
       }
@@ -249,6 +293,18 @@ Page({
           showCustomRecipientInput: false
         })
         this.loadRecipients()
+      } else if (res.result.code === -2) {
+        // 未登录
+        wx.showModal({
+          title: '需要登录',
+          content: res.result.message,
+          confirmText: '去登录',
+          success: (res) => {
+            if (res.confirm) {
+              this.goToLogin()
+            }
+          }
+        })
       } else {
         wx.showToast({ title: res.result.message, icon: 'none' })
       }

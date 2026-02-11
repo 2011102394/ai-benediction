@@ -24,8 +24,8 @@
           <text class="item-icon">{{item.icon}}</text>
           <text class="item-name">{{item.name}}</text>
         </view>
-        <!-- 添加自定义节日按钮 -->
-        <view class="selector-item add-btn" bindtap="showAddFestivalInput">
+        <!-- 添加自定义节日按钮 - 仅登录用户显示 -->
+        <view class="selector-item add-btn" bindtap="showAddFestivalInput" wx:if="{{isLogin}}">
           <text class="item-icon">➕</text>
           <text class="item-name">添加</text>
         </view>
@@ -58,8 +58,8 @@
           <text class="item-icon">{{item.icon}}</text>
           <text class="item-name">{{item.name}}</text>
         </view>
-        <!-- 添加自定义对象按钮 -->
-        <view class="selector-item add-btn" bindtap="showAddRecipientInput">
+        <!-- 添加自定义对象按钮 - 仅登录用户显示 -->
+        <view class="selector-item add-btn" bindtap="showAddRecipientInput" wx:if="{{isLogin}}">
           <text class="item-icon">➕</text>
           <text class="item-name">添加</text>
         </view>

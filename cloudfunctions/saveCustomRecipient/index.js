@@ -12,6 +12,11 @@ exports.main = async (event, context) => {
   const openid = wxContext.OPENID
   const { name } = event
 
+  // 检查是否登录
+  if (!openid) {
+    return { code: -2, message: '请先登录后再添加自定义对象' }
+  }
+
   if (!name || !name.trim()) {
     return { code: -1, message: '对象名称不能为空' }
   }

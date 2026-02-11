@@ -6,6 +6,54 @@
   background: linear-gradient(135deg, #f7f7f7 0%, #f0f0f0 100%);
 }
 
+/* 登录提示区域 */
+.login-section {
+  margin: 40rpx 30rpx;
+  padding: 60rpx 40rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  text-align: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.login-hint {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.login-desc {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  height: 88rpx;
+  background: linear-gradient(135deg, #D32F2F, #FF6B6B);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  box-shadow: 0 4rpx 16rpx rgba(211, 47, 47, 0.3);
+  border: none;
+  line-height: 1;
+}
+
+.login-btn::after {
+  border: none;
+}
+
+.login-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(211, 47, 47, 0.2);
+}
+
 /* 清空按钮 */
 .filter-content {
   display: flex;

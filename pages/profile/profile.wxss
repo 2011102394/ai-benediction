@@ -161,65 +161,57 @@
   padding-top: 20rpx;
 }
 
-/* 特权卡片 */
-.privilege-card {
-  background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
-  border-radius: 20rpx;
-  padding: 30rpx;
-  margin-top: 30rpx;
-  border: 2rpx solid #90CAF9;
-}
-
-.privilege-title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #1565C0;
-  margin-bottom: 24rpx;
-}
-
-.privilege-list {
-  margin-bottom: 30rpx;
-}
-
-.privilege-item {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-  margin-bottom: 16rpx;
-}
-
-.privilege-icon {
-  font-size: 32rpx;
-}
-
-.privilege-text {
-  font-size: 28rpx;
-  color: #333;
-}
-
-.login-btn {
+/* 登录按钮 - 放在action-list底部 */
+.login-btn-main {
+  width: 100% !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12rpx;
-  padding: 24rpx 0;
-  background: linear-gradient(135deg, #2196F3, #1565C0);
+  margin-top: 20rpx;
+  padding: 0;
+  height: 88rpx;
+  background: linear-gradient(135deg, #D32F2F, #FF6B6B);
   color: #fff;
-  font-size: 32rpx;
+  font-size: 30rpx;
   font-weight: 600;
-  border-radius: 12rpx;
-  box-shadow: 0 4rpx 16rpx rgba(33, 150, 243, 0.3);
+  border-radius: 44rpx;
+  box-shadow: 0 4rpx 16rpx rgba(211, 47, 47, 0.3);
   border: none;
-  line-height: 1.5;
+  line-height: 1;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
-.login-btn::after {
+.login-btn-main::after {
   border: none;
 }
 
-.login-btn:active {
+.login-btn-main:active {
   transform: scale(0.98);
-  box-shadow: 0 2rpx 8rpx rgba(33, 150, 243, 0.3);
+  box-shadow: 0 2rpx 8rpx rgba(211, 47, 47, 0.2);
+}
+
+/* action-item支持多行内容 */
+.action-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.action-desc {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 特权列表项 - 移除箭头 */
+.action-item.privilege-item .action-arrow {
+  display: none;
+}
+
+/* 最后一个特权项不显示分隔线 */
+.action-item.privilege-item.last-privilege::before {
+  display: none;
 }
 
 /* 功能列表 */

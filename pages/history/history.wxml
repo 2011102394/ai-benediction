@@ -1,4 +1,15 @@
 <view class="container">
+  <!-- 未登录提示 -->
+  <view class="login-section" wx:if="{{!isLogin}}">
+    <view class="login-hint">🔒 需要登录</view>
+    <view class="login-desc">登录后可查看和同步您的历史记录</view>
+    <button class="login-btn" bindtap="goToLogin">
+      <text>去登录</text>
+    </button>
+  </view>
+
+  <!-- 登录后的内容 -->
+  <block wx:if="{{isLogin}}">
   <!-- 筛选标签 -->
   <view class="filter-container">
     <view class="filter-content">
@@ -85,4 +96,5 @@
     <text class="empty-text">暂无历史记录</text>
     <text class="empty-subtext">生成祝福语或回复语后将自动保存到这里</text>
   </view>
+  </block>
 </view>

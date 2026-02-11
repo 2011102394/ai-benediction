@@ -1,6 +1,8 @@
 /**
  * 历史记录页面（云端版）
  */
+const { isLoggedIn } = require('../../utils/user.js')
+
 Page({
   data: {
     allHistoryList: [],
@@ -8,15 +10,33 @@ Page({
     filterType: 'all',
     totalCount: 0,
     blessingCount: 0,
-    replyCount: 0
+    replyCount: 0,
+    isLogin: false
   },
 
   onLoad() {
-    this.loadHistory()
+    this.checkLoginAndLoad()
   },
 
   onShow() {
-    this.loadHistory()
+    this.checkLoginAndLoad()
+  },
+
+  // 检查登录状态并加载数据
+  checkLoginAndLoad() {
+    const loggedIn = isLoggedIn()
+    this.setData({ isLogin: loggedIn })
+    
+    if (loggedIn) {
+      this.loadHistory()
+    }
+  },
+
+  // 跳转到个人中心登录
+  goToLogin() {
+    wx.switchTab({
+      url: '/pages/profile/profile'
+    })
   },
 
   // 加载历史记录（从云端）

@@ -50,24 +50,42 @@
   </view>
 
   <!-- 登录特权说明 -->
-  <view class="privilege-card" wx:if="{{!isLogin}}">
-    <view class="privilege-title">🔓 登录特权</view>
-    <view class="privilege-list">
-      <view class="privilege-item">
-        <text class="privilege-icon">✨</text>
-        <text class="privilege-text">每天10次免费机会（游客仅5次）</text>
-      </view>
-      <view class="privilege-item">
-        <text class="privilege-icon">🎁</text>
-        <text class="privilege-text">邀请好友各得2次奖励（永久有效）</text>
-      </view>
-      <view class="privilege-item">
-        <text class="privilege-icon">☁️</text>
-        <text class="privilege-text">数据云端同步，换设备不丢失</text>
+  <view class="action-list" wx:if="{{!isLogin}}">
+    <view class="action-title">🔐 登录特权</view>
+    
+    <view class="action-item privilege-item">
+      <text class="action-icon">✨</text>
+      <view class="action-content">
+        <text class="action-text">更多免费次数</text>
+        <text class="action-desc">每天10次（游客仅5次）</text>
       </view>
     </view>
-    <button class="login-btn" bindtap="handleLogin">
-      <text>🔐</text>
+    
+    <view class="action-item privilege-item">
+      <text class="action-icon">🎁</text>
+      <view class="action-content">
+        <text class="action-text">邀请奖励</text>
+        <text class="action-desc">每邀请1人各得2次（永久有效）</text>
+      </view>
+    </view>
+    
+    <view class="action-item privilege-item">
+      <text class="action-icon">📝</text>
+      <view class="action-content">
+        <text class="action-text">自定义内容</text>
+        <text class="action-desc">可添加专属节日和祝福对象</text>
+      </view>
+    </view>
+    
+    <view class="action-item privilege-item last-privilege">
+      <text class="action-icon">☁️</text>
+      <view class="action-content">
+        <text class="action-text">云端同步</text>
+        <text class="action-desc">数据保存，换设备不丢失</text>
+      </view>
+    </view>
+    
+    <button class="login-btn-main" bindtap="handleLogin">
       <text>微信一键登录</text>
     </button>
   </view>
@@ -76,7 +94,7 @@
   <view class="action-list">
     <view class="action-title">🎯 快捷操作</view>
     
-    <view class="action-item" bindtap="goToHistory">
+    <view class="action-item" bindtap="goToHistory" wx:if="{{isLogin}}">
       <text class="action-icon">📜</text>
       <text class="action-text">历史记录</text>
       <text class="action-arrow">›</text>
@@ -101,9 +119,10 @@
     </view>
   </view>
 
-  <!-- 调试功能（开发环境显示） -->
+  <!-- 调试功能（开发环境显示）
   <view class="debug-section">
     <view class="debug-title">⚙️ 调试选项</view>
     <button class="debug-btn" bindtap="handleReset">重置使用次数</button>
   </view>
+  -->
 </view>

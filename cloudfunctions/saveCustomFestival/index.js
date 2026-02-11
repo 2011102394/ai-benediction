@@ -12,6 +12,11 @@ exports.main = async (event, context) => {
   const openid = wxContext.OPENID
   const { name, theme } = event
 
+  // 检查是否登录
+  if (!openid) {
+    return { code: -2, message: '请先登录后再添加自定义节日' }
+  }
+
   if (!name || !name.trim()) {
     return { code: -1, message: '节日名称不能为空' }
   }
