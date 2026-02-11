@@ -4,6 +4,7 @@
 const { checkUsage, consumeUsage, addInviteReward, reinitUsageAfterLogin } = require('../../utils/usage.js')
 const { isLoggedIn, login } = require('../../utils/user.js')
 const { getTheme } = require('../../utils/theme.js')
+const { getCurrentYearInfo } = require('../../utils/lunar.js')
 
 Page({
   data: {
@@ -95,54 +96,18 @@ Page({
     this.setData({ receivedBlessing: e.detail.value })
   },
 
-  // 获取农历年份和生肖信息
+  // 获取农历年份和生肖信息（使用 lunar-javascript 库）
   getLunarYearInfo(isSpringFestival = false) {
-    const ZODIAC_ANIMALS = ['猴', '鸡', '狗', '猪', '鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊']
-    const SPRING_FESTIVAL_DATES = {
-      2020: { month: 1, day: 25 }, 2021: { month: 2, day: 12 }, 2022: { month: 2, day: 1 },
-      2023: { month: 1, day: 22 }, 2024: { month: 2, day: 10 }, 2025: { month: 1, day: 29 },
-      2026: { month: 2, day: 17 }, 2027: { month: 2, day: 6 }, 2028: { month: 1, day: 26 },
-      2029: { month: 2, day: 13 }, 2030: { month: 2, day: 3 }
-    }
-
+    const lunarInfo = getCurrentYearInfo(isSpringFestival)
     const now = new Date()
-    const year = now.getFullYear()
-    const month = now.getMonth() + 1
-    const day = now.getDate()
-    
-    let springFestival = SPRING_FESTIVAL_DATES[year] || { month: 2, day: 4 }
-    
-    let lunarYear = year
-    let isBeforeSpringFestival = false
-    
-    if (month < springFestival.month || 
-        (month === springFestival.month && day < springFestival.day)) {
-      isBeforeSpringFestival = true
-    }
-    
-    if (isSpringFestival) {
-      if (isBeforeSpringFestival) {
-        lunarYear = year
-      } else {
-        const currentDate = new Date(year, month - 1, day)
-        const sfDate = new Date(year, springFestival.month - 1, springFestival.day)
-        const daysDiff = Math.floor((currentDate - sfDate) / (1000 * 60 * 60 * 24))
-        if (daysDiff <= 30) {
-          lunarYear = year
-        } else {
-          lunarYear = year + 1
-        }
-      }
-    } else {
-      if (isBeforeSpringFestival) {
-        lunarYear = year - 1
-      }
-    }
-    
+
     return {
-      lunarYear,
-      zodiac: ZODIAC_ANIMALS[lunarYear % 12],
-      gregorianDate: `${year}年${month}月${day}日`
+      lunarYear: lunarInfo.lunarYear,
+      zodiac: lunarInfo.zodiac,
+      ganzhiYear: lunarInfo.ganzhiYear,
+      gregorianDate: `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`,
+      // 额外信息，可用于调试
+      daysToSpring: lunarInfo.daysToSpring
     }
   },
 

@@ -1,0 +1,21 @@
+# 依赖目录
+node_modules/
+miniprogram_npm/
+
+# npm
+package-lock.json
+.npmrc
+
+# 微信开发者工具生成的文件
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# 测试文件
+test_lunar.js
+
+# 其他临时文件
+*.tmp
+*.swp
+*~

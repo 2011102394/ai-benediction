@@ -1,0 +1,13 @@
+{
+  "name": "ai-benediction",
+  "version": "1.0.0",
+  "description": "AI祝福语生成工具 - 微信小程序",
+  "main": "app.js",
+  "scripts": {},
+  "keywords": ["wechat", "miniprogram", "ai", "blessing"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "lunar-javascript": "^1.6.12"
+  }
+}
