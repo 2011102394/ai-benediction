@@ -19,7 +19,6 @@
           data-name="{{item.name}}"
           data-theme="{{item.theme}}"
           bindtap="selectFestival"
-          style="{{selectedFestival === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
         >
           <text class="item-icon">{{item.icon}}</text>
           <text class="item-name">{{item.name}}</text>
@@ -53,7 +52,6 @@
           data-id="{{item.id}}"
           data-name="{{item.name}}"
           bindtap="selectRecipient"
-          style="{{selectedRecipient === item.id ? 'background:' + (styles.gradient || 'linear-gradient(135deg, #D32F2F, #FF6B6B)') + ';color:#fff;' : ''}}"
         >
           <text class="item-icon">{{item.icon}}</text>
           <text class="item-name">{{item.name}}</text>
@@ -68,8 +66,20 @@
     
   </view>
 
-  <!-- 生成按钮 -->
+  <!-- 生成结果 -->
+  <view class="result-card" wx:if="{{generatedBlessing}}">
+    <view class="result-text">{{generatedBlessing}}</view>
+    <view class="result-actions">
+      <view class="action-btn copy" bindtap="copyBlessing">
+        <text>📋</text>
+        <text>复制</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 生成按钮（仅在次数未用完时显示） -->
   <button 
+    wx:if="{{usageInfo.type !== 'need_login' && usageInfo.type !== 'need_invite'}}"
     class="generate-btn {{!canGenerate ? 'disabled' : ''}}"
     bindtap="generateBlessing"
     disabled="{{!canGenerate || loading}}"
@@ -78,30 +88,72 @@
     <text wx:else>生成中...</text>
   </button>
 
-  <!-- 使用次数提示 -->
-  <view class="usage-hint">
+  <!-- 使用次数提示（仅在未显示限制卡片时显示） -->
+  <view class="usage-hint" wx:if="{{usageInfo.type !== 'need_login' && usageInfo.type !== 'need_invite'}}">
     <text>{{usageInfo.message || '今日可用5次'}}</text>
     <text wx:if="{{usageInfo.inviteRemaining > 0}}" class="invite-count">（邀请奖励: {{usageInfo.inviteRemaining}}次）</text>
   </view>
 
-  <!-- 未登录引导 -->
-  <view class="login-section" wx:if="{{usageInfo.type === 'need_login'}}">
-    <view class="login-hint">💡 免费次数已用完</view>
-    <view class="login-desc">登录后每天可享10次免费机会，还能邀请好友获取更多次数！</view>
-    <button class="login-btn" bindtap="goToLogin">
-      <text>🔐</text>
-      <text>立即登录获取更多次数</text>
-    </button>
+  <!-- 免费次数用完提示 - 登录引导 -->
+  <view class="limit-card" wx:if="{{usageInfo.type === 'need_login'}}">
+    <view class="limit-title">⚠️ 免费次数已用完</view>
+    
+    <view class="limit-item">
+      <text class="limit-icon">✨</text>
+      <view class="limit-content">
+        <text class="limit-text">更多免费次数</text>
+        <text class="limit-desc">每天10次（游客仅5次）</text>
+      </view>
+    </view>
+    
+    <view class="limit-item">
+      <text class="limit-icon">🎁</text>
+      <view class="limit-content">
+        <text class="limit-text">邀请奖励</text>
+        <text class="limit-desc">每邀请1人各得2次（永久有效）</text>
+      </view>
+    </view>
+    
+    <view class="limit-item">
+      <text class="limit-icon">📝</text>
+      <view class="limit-content">
+        <text class="limit-text">自定义内容</text>
+        <text class="limit-desc">可添加专属节日和祝福对象</text>
+      </view>
+    </view>
+    
+    <view class="limit-item last-item">
+      <text class="limit-icon">☁️</text>
+      <view class="limit-content">
+        <text class="limit-text">云端同步</text>
+        <text class="limit-desc">数据保存，换设备不丢失</text>
+      </view>
+    </view>
+    
+    <button class="limit-btn" bindtap="handleLogin">微信一键登录</button>
   </view>
 
-  <!-- 邀请好友获取次数 -->
-  <view class="invite-section" wx:if="{{usageInfo.type === 'need_invite'}}">
-    <view class="invite-hint">💡 今日免费次数已用完</view>
-    <view class="invite-desc">邀请好友，每邀请一人可获得2次额外机会（永久有效）</view>
-    <button class="invite-btn" open-type="share">
-      <text>🎁</text>
-      <text>邀请好友获取次数</text>
-    </button>
+  <!-- 免费次数用完提示 - 邀请引导 -->
+  <view class="limit-card" wx:if="{{usageInfo.type === 'need_invite'}}">
+    <view class="limit-title">⚠️ 今日免费次数已用完</view>
+    
+    <view class="limit-item">
+      <text class="limit-icon">🎁</text>
+      <view class="limit-content">
+        <text class="limit-text">邀请好友得次数</text>
+        <text class="limit-desc">每邀请1人双方各得2次（永久有效）</text>
+      </view>
+    </view>
+    
+    <view class="limit-item last-item">
+      <text class="limit-icon">⏰</text>
+      <view class="limit-content">
+        <text class="limit-text">每日重置</text>
+        <text class="limit-desc">24小时后免费次数自动恢复</text>
+      </view>
+    </view>
+    
+    <button class="limit-btn invite" open-type="share">邀请好友获取次数</button>
   </view>
 
   <!-- 广告相关代码（流量主开通后启用）
@@ -113,17 +165,6 @@
     </view>
   </view>
   -->
-
-  <!-- 生成结果 -->
-  <view class="result-card" wx:if="{{generatedBlessing}}">
-    <view class="result-text">{{generatedBlessing}}</view>
-    <view class="result-actions">
-      <view class="action-btn copy" bindtap="copyBlessing">
-        <text>📋</text>
-        <text>复制</text>
-      </view>
-    </view>
-  </view>
 
   <!-- 加载动画 -->
   <view class="loading" wx:if="{{loading}}">

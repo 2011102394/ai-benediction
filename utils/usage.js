@@ -36,6 +36,35 @@ function initUsage() {
 }
 
 /**
+ * 登录后重新初始化使用次数
+ * 将免费次数从游客额度（5次）调整为登录用户额度（10次）
+ */
+function reinitUsageAfterLogin() {
+  const today = new Date().toDateString()
+  const lastInitDate = wx.getStorageSync('usage_init_date')
+  
+  // 如果是同一天，且之前是游客状态（只用了5次额度），需要重新计算
+  if (lastInitDate === today) {
+    const currentFreeCount = wx.getStorageSync('free_count') || 0
+    const guestMax = GUEST_FREE_COUNT
+    const loginMax = LOGIN_FREE_COUNT
+    
+    // 如果当前免费次数小于登录用户的最大次数，则补足到登录用户额度
+    // 例如：游客用了5次（剩余0次），登录后应该有10-5=5次
+    // 或者游客用了3次（剩余2次），登录后应该有10-3=7次
+    if (currentFreeCount < loginMax) {
+      const usedCount = guestMax - currentFreeCount
+      const newFreeCount = Math.max(0, loginMax - usedCount)
+      wx.setStorageSync('free_count', newFreeCount)
+    }
+  } else {
+    // 不是同一天，直接按登录用户重置
+    wx.setStorageSync('free_count', LOGIN_FREE_COUNT)
+    wx.setStorageSync('usage_init_date', today)
+  }
+}
+
+/**
  * 检查使用次数状态
  */
 function checkUsage() {
@@ -246,6 +275,7 @@ function resetUsage() {
 
 module.exports = {
   initUsage,
+  reinitUsageAfterLogin,
   checkUsage,
   consumeUsage,
   addInviteReward,

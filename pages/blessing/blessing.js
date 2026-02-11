@@ -1,7 +1,7 @@
 /**
  * 祝福语生成页面
  */
-const { checkUsage, consumeUsage, addInviteReward } = require('../../utils/usage.js')
+const { checkUsage, consumeUsage, addInviteReward, reinitUsageAfterLogin } = require('../../utils/usage.js')
 const { isLoggedIn, login } = require('../../utils/user.js')
 const { getTheme } = require('../../utils/theme.js')
 
@@ -138,14 +138,8 @@ Page({
     this.setData({
       selectedFestival: id,
       selectedFestivalName: name,
-      showCustomFestivalInput: isCustom,
-      theme: theme || 'spring',
-      styles: getTheme(theme || 'spring')
+      showCustomFestivalInput: isCustom
     })
-
-    // 更新导航栏颜色
-    const app = getApp()
-    app.setCurrentTheme(theme || 'spring')
   },
 
   // 选择祝福对象
@@ -315,7 +309,117 @@ Page({
     }
   },
 
-  // 生成祝福语
+  // 获取农历年份和生肖信息
+  getLunarYearInfo(isSpringFestival = false) {
+    const ZODIAC_ANIMALS = ['猴', '鸡', '狗', '猪', '鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊']
+    const SPRING_FESTIVAL_DATES = {
+      2020: { month: 1, day: 25 }, 2021: { month: 2, day: 12 }, 2022: { month: 2, day: 1 },
+      2023: { month: 1, day: 22 }, 2024: { month: 2, day: 10 }, 2025: { month: 1, day: 29 },
+      2026: { month: 2, day: 17 }, 2027: { month: 2, day: 6 }, 2028: { month: 1, day: 26 },
+      2029: { month: 2, day: 13 }, 2030: { month: 2, day: 3 }
+    }
+
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = now.getMonth() + 1
+    const day = now.getDate()
+    
+    let springFestival = SPRING_FESTIVAL_DATES[year] || { month: 2, day: 4 }
+    
+    let lunarYear = year
+    let isBeforeSpringFestival = false
+    
+    if (month < springFestival.month || 
+        (month === springFestival.month && day < springFestival.day)) {
+      isBeforeSpringFestival = true
+    }
+    
+    if (isSpringFestival) {
+      if (isBeforeSpringFestival) {
+        lunarYear = year
+      } else {
+        const currentDate = new Date(year, month - 1, day)
+        const sfDate = new Date(year, springFestival.month - 1, springFestival.day)
+        const daysDiff = Math.floor((currentDate - sfDate) / (1000 * 60 * 60 * 24))
+        if (daysDiff <= 30) {
+          lunarYear = year
+        } else {
+          lunarYear = year + 1
+        }
+      }
+    } else {
+      if (isBeforeSpringFestival) {
+        lunarYear = year - 1
+      }
+    }
+    
+    return {
+      lunarYear,
+      zodiac: ZODIAC_ANIMALS[lunarYear % 12],
+      gregorianDate: `${year}年${month}月${day}日`
+    }
+  },
+
+  // 构建Prompt
+  buildPrompt(festival, festivalName, recipient, recipientName) {
+    const isSpringFestival = festival === 'spring'
+    const lunarInfo = this.getLunarYearInfo(isSpringFestival)
+    const targetZodiac = lunarInfo.zodiac
+    const targetYear = lunarInfo.lunarYear
+
+    // 只有春节才使用生肖年份，其他节日不使用
+    const isShowZodiac = festival === 'spring'
+    const zodiacText = isShowZodiac ? `${targetZodiac}年（${targetYear}年）的` : ''
+    const zodiacRequirement = isShowZodiac
+      ? `【必须使用的生肖】${targetZodiac}年
+【必须使用的年份】${targetYear}年
+
+【最重要要求】
+1. 你必须在祝福语开头明确使用"${targetYear}年${targetZodiac}年"或"${targetZodiac}年"
+2. 整个祝福语中只能出现"${targetZodiac}"这个生肖
+3. 绝对不能出现"蛇年"、"龙年"、"兔年"等其他生肖
+4. 当前公历日期是${lunarInfo.gregorianDate}，但祝福语要使用${targetYear}年（${targetZodiac}年）
+`
+      : `【重要要求】
+1. 这是一个非春节的节日祝福，不要在祝福语中出现任何生肖年份（如"蛇年"、"龙年"等）
+2. 也不要出现"20XX年"这样的公历年份
+3. 专注于节日本身的祝福内容
+`
+
+    // 添加随机性提示，避免重复
+    const randomStyles = [
+      '温馨感人',
+      '幽默风趣',
+      '文艺优雅',
+      '简洁有力',
+      '传统典雅',
+      '亲切自然'
+    ]
+    const randomStyle = randomStyles[Math.floor(Math.random() * randomStyles.length)]
+    const randomSeed = Math.floor(Math.random() * 1000)
+
+    return {
+      prompt: `你是一位擅长写节日祝福语的文案专家。请生成一段${zodiacText}${festivalName || festival}祝福语。
+
+【节日】${festivalName || festival}
+【祝福对象】${recipientName || recipient}
+【风格要求】${randomStyle}（随机种子：${randomSeed}）
+${zodiacRequirement}
+【内容要求】
+1. 祝福语要符合${festivalName || festival}的节日氛围和传统文化
+2. 根据对象身份调整语气和用词（对领导要尊敬、对父母要亲切、对朋友要活泼等）
+3. 字数控制在50-100字之间
+4. 语言优美、情感真挚、朗朗上口，避免使用常见的套话和陈词滥调
+5. 可以适当加入emoji增加活泼感
+6. 直接输出祝福语，不要解释
+7. 每次生成的祝福语要有创意，不要重复之前的内容
+
+请直接输出祝福语：`,
+      lunarInfo
+    }
+  },
+
+  // 使用 wx.cloud.extend.AI 生成祝福语（前端直接调用，使用 AI 小程序成长计划赠送的 Token）
   async generateBlessing() {
     const { selectedFestival, selectedFestivalName, selectedRecipient, selectedRecipientName } = this.data
     
@@ -327,49 +431,72 @@ Page({
     // 检查使用次数
     const usage = checkUsage()
     if (!usage.canUse) {
-      if (usage.type === 'need_login') {
-        // 未登录用户提示登录
-        this.showLoginDialog()
-      } else if (usage.type === 'need_invite') {
-        // 登录用户提示邀请好友
-        this.showInviteDialog()
-      }
-      /* 广告相关代码（流量主开通后启用）
-      else if (usage.type === 'need_ad') {
-        this.showAdDialog()
-      }
-      */
-      else {
-        wx.showToast({ title: usage.message, icon: 'none' })
-      }
+      // 页面上已有相应的提示区域，不再弹出 Modal
+      wx.showToast({ title: usage.message || '次数已用完', icon: 'none' })
+      return
+    }
+
+    // 检查是否支持 AI 能力
+    if (!wx.cloud || !wx.cloud.extend || !wx.cloud.extend.AI) {
+      wx.showModal({
+        title: '提示',
+        content: '当前基础库版本不支持 AI 能力，请升级微信版本后重试',
+        showCancel: false
+      })
       return
     }
 
     this.setData({ loading: true, generatedBlessing: '' })
 
     try {
-      const res = await wx.cloud.callFunction({
-        name: 'generateBlessing',
+      // 构建Prompt
+      const { prompt, lunarInfo } = this.buildPrompt(
+        selectedFestival,
+        selectedFestivalName,
+        selectedRecipient,
+        selectedRecipientName
+      )
+
+      // 调试信息（如需排查问题可取消注释）
+      // console.log('生成祝福语:', { festival: selectedFestival, lunarYear: lunarInfo.lunarYear, zodiac: lunarInfo.zodiac })
+
+      // 前端直接调用 wx.cloud.extend.AI（使用 AI 小程序成长计划赠送的免费 Token）
+      const model = wx.cloud.extend.AI.createModel('hunyuan-exp')
+      const res = await model.streamText({
         data: {
-          festival: selectedFestival,
-          festivalName: selectedFestivalName,
-          recipient: selectedRecipient,
-          recipientName: selectedRecipientName
+          model: 'hunyuan-turbos-latest',
+          messages: [
+            { role: 'system', content: '你是一位擅长写节日祝福语的文案专家，生成的祝福语要温馨、得体、富有文采。' },
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.8,
+          max_tokens: 1024
         }
       })
 
-      if (res.result.code === 0) {
-        this.setData({ generatedBlessing: res.result.data })
+      let blessing = ''
+      for await (let event of res.eventStream) {
+        if (event.data === '[DONE]') break
+        const data = JSON.parse(event.data)
+        const text = data?.choices?.[0]?.delta?.content
+        if (text) {
+          blessing += text
+          this.setData({ generatedBlessing: blessing })
+        }
+      }
+
+      if (blessing) {
         // 扣减次数（优先使用免费次数，其次使用邀请奖励）
         const usageType = usage.type === 'free' ? 'free' : 'invite'
         consumeUsage(usageType)
         this.checkUserUsage()
         // 保存到历史记录
-        this.saveToHistory(res.result.data)
+        this.saveToHistory(blessing)
       } else {
-        wx.showToast({ title: res.result.message, icon: 'none' })
+        throw new Error('生成内容为空')
       }
     } catch (err) {
+      console.error('生成祝福语失败:', err)
       wx.showToast({ title: '生成失败，请重试', icon: 'none' })
     } finally {
       this.setData({ loading: false })
@@ -413,6 +540,58 @@ Page({
     wx.switchTab({
       url: '/pages/profile/profile'
     })
+  },
+
+  // 微信一键登录
+  async handleLogin() {
+    try {
+      wx.showLoading({ title: '登录中...' })
+      const result = await login()
+
+      if (result.success) {
+        // 登录后重新初始化使用次数（将游客额度转为登录用户额度）
+        reinitUsageAfterLogin()
+        // 刷新登录状态
+        this.setData({ isLogin: true })
+        // 检查使用次数
+        this.checkUserUsage()
+        // 显示成功提示
+        wx.showToast({ title: '登录成功', icon: 'success' })
+        // 检查是否有待处理的邀请
+        this.checkPendingInvite()
+      }
+    } catch (err) {
+      wx.showToast({ title: '登录失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+    }
+  },
+
+  // 检查待处理的邀请
+  checkPendingInvite() {
+    const pendingInviter = wx.getStorageSync('pending_inviter')
+    if (pendingInviter) {
+      // 给被邀请人添加奖励
+      const newCount = addInviteReward(2)
+      
+      wx.showModal({
+        title: '获得邀请奖励',
+        content: '你通过好友邀请进入，已获得2次额外生成机会！',
+        showCancel: false,
+        success: () => {
+          this.checkUserUsage()
+        }
+      })
+      
+      // 清除待处理标记
+      wx.removeStorageSync('pending_inviter')
+      
+      // 调用云函数给邀请人添加奖励
+      wx.cloud.callFunction({
+        name: 'rewardInviter',
+        data: { inviterId: pendingInviter }
+      }).catch(() => {})
+    }
   },
 
   // 显示邀请好友弹窗

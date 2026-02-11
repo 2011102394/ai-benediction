@@ -47,7 +47,7 @@
     "disableSWC": true
   },
   "compileType": "miniprogram",
-  "libVersion": "3.5.2",
+  "libVersion": "3.7.0",
   "appid": "wxf18dce92c195a6a3",
   "projectname": "ai-benediction",
   "cloudfunctionRoot": "cloudfunctions/",

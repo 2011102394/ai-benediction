@@ -34,32 +34,44 @@
 ai-benediction/
 ├── cloudfunctions/          # 云函数
 │   ├── login/              # 用户登录获取openid
-│   ├── generateBlessing/   # 生成祝福语
-│   ├── generateReply/      # 生成回复语
 │   ├── getFestivals/       # 获取节日列表
 │   ├── saveCustomFestival/ # 保存自定义节日
 │   ├── getRecipients/      # 获取祝福对象列表
-│   └── saveCustomRecipient/# 保存自定义对象
+│   ├── saveCustomRecipient/# 保存自定义对象
+│   ├── saveHistory/        # 保存历史记录
+│   ├── getHistory/         # 获取历史记录
+│   └── ...                 # 其他辅助云函数
 ├── pages/                   # 页面
 │   ├── blessing/           # 祝福语生成首页
 │   ├── reply/              # 回复语生成页
-│   └── history/            # 历史记录页
+│   ├── history/            # 历史记录页
+│   └── profile/            # 个人中心
 ├── utils/                   # 工具函数
 │   ├── theme.js            # 节日主题配置
-│   └── usage.js            # 使用次数控制
+│   ├── usage.js            # 使用次数控制
+│   └── user.js             # 用户管理
 └── images/                  # 图片资源
 ```
 
-## 混元大模型配置
+## AI 能力配置
 
-在云函数 `generateBlessing` 和 `generateReply` 中配置环境变量：
+本项目使用 **微信云开发 AI 能力** (`wx.cloud.extend.AI`) 直接在前端调用混元大模型：
 
-1. 在微信开发者工具中，点击「云开发」→「云函数」→「环境变量」
-2. 添加以下变量：
-   - `OPENAI_API_KEY`: 你的 OpenAI 兼容接口 API Key
-   - `OPENAI_BASE_URL`: 你的 OpenAI 兼容接口地址
+### 接入方式
+- **前端直接调用**：`wx.cloud.extend.AI.createModel('hunyuan-exp')`
+- **使用 AI 小程序成长计划赠送的免费 Token**（1亿 Token 额度）
 
-或使用腾讯云提供的混元大模型 API。
+### 开通步骤
+1. 登录 [云开发控制台](https://tcb.cloud.tencent.com)
+2. 进入「AI+」页面
+3. 报名「AI 小程序成长计划」领取免费额度
+4. 无需配置 API Key，直接使用 `wx.cloud.extend.AI` 调用
+
+### 优势
+- ✅ 无需购买 API Key，使用赠送的免费 Token
+- ✅ 前端直接调用，减少云函数调用次数
+- ✅ 流式输出，更好的用户体验
+- ✅ 更低的延迟
 
 ## 部署步骤
 
@@ -75,12 +87,14 @@ ai-benediction/
 
 需要部署的云函数：
 - login
-- generateBlessing
-- generateReply
 - getFestivals
 - saveCustomFestival
 - getRecipients
 - saveCustomRecipient
+- saveHistory
+- getHistory
+- getUserUsage
+- syncUserUsage
 
 ### 3. 创建数据库集合
 在云开发控制台数据库中创建以下集合：
