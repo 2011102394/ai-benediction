@@ -1,5 +1,5 @@
 /**
- * 回复语生成页面
+ * 回复语创作页面
  */
 const { checkUsage, consumeUsage, addInviteReward, reinitUsageAfterLogin } = require('../../utils/usage.js')
 const { isLoggedIn, login } = require('../../utils/user.js')
@@ -150,7 +150,7 @@ Page({
     const randomSeed = Math.floor(Math.random() * 1000)
 
     return {
-      prompt: `你是一位懂礼仪的社交达人。请生成一段${zodiacText}${festivalName || festival}祝福回复。
+      prompt: `你是一位懂礼仪的社交达人。请创作一段${zodiacText}${festivalName || festival}祝福回复。
 
 【节日】${festivalName || festival}
 【收到祝福语】${receivedBlessing}
@@ -165,14 +165,14 @@ ${zodiacRequirement}
 5. 语言得体、情感真挚，避免使用常见的套话和陈词滥调
 6. 可以适当加入emoji增加活泼感
 7. 直接输出回复语，不要解释
-8. 每次生成的回复要有创意，不要重复之前的内容
+8. 每次创作的回复要有创意，不要重复之前的内容
 
 请直接输出回复语：`,
       lunarInfo
     }
   },
 
-  // 使用 wx.cloud.extend.AI 生成回复语（前端直接调用，使用 AI 小程序成长计划赠送的 Token）
+  // 使用 wx.cloud.extend.AI 创作回复语（前端直接调用，使用云服务能力）
   async generateReply() {
     const { selectedFestival, selectedFestivalName, selectedRecipient, selectedRecipientName, receivedBlessing } = this.data
     
@@ -216,9 +216,9 @@ ${zodiacRequirement}
       )
 
       // 调试信息（如需排查问题可取消注释）
-      // console.log('生成回复语:', { festival: selectedFestival, lunarYear: lunarInfo.lunarYear, zodiac: lunarInfo.zodiac })
+      // console.log('创作回复语:', { festival: selectedFestival, lunarYear: lunarInfo.lunarYear, zodiac: lunarInfo.zodiac })
 
-      // 前端直接调用 wx.cloud.extend.AI（使用 AI 小程序成长计划赠送的免费 Token）
+      // 前端直接调用 wx.cloud.extend.AI（使用云服务能力）
       const model = wx.cloud.extend.AI.createModel('hunyuan-exp')
       const res = await model.streamText({
         data: {
@@ -250,11 +250,11 @@ ${zodiacRequirement}
         this.checkUserUsage()
         this.saveToHistory(reply)
       } else {
-        throw new Error('生成内容为空')
+        throw new Error('创作内容为空')
       }
     } catch (err) {
-      console.error('生成回复语失败:', err)
-      wx.showToast({ title: '生成失败，请重试', icon: 'none' })
+      console.error('创作回复语失败:', err)
+      wx.showToast({ title: '创作失败，请重试', icon: 'none' })
     } finally {
       this.setData({ loading: false })
     }
@@ -331,7 +331,7 @@ ${zodiacRequirement}
       
       wx.showModal({
         title: '获得邀请奖励',
-        content: '你通过好友邀请进入，已获得2次额外生成机会！',
+        content: '你通过好友邀请进入，已获得2次额外创作机会！',
         showCancel: false,
         success: () => {
           this.checkUserUsage()
@@ -433,7 +433,7 @@ ${zodiacRequirement}
     const app = getApp()
     const openId = app.globalData && app.globalData.openId
     return {
-      title: '智能回复祝福语',
+      title: '得体回复祝福语',
       path: openId ? `/pages/reply/reply?inviter=${openId}` : '/pages/reply/reply'
     }
   }

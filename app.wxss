@@ -81,7 +81,7 @@ page {
   font-size: 26rpx;
 }
 
-/* 生成按钮 */
+/* 创作按钮 */
 .generate-btn {
   width: 100%;
   height: 96rpx;

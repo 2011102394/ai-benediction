@@ -94,7 +94,7 @@
   <view class="empty-state" wx:if="{{filteredList.length === 0}}">
     <view class="empty-icon">📝</view>
     <text class="empty-text">暂无历史记录</text>
-    <text class="empty-subtext">生成祝福语或回复语后将自动保存到这里</text>
+    <text class="empty-subtext">创作祝福语或回复语后将自动保存到这里</text>
   </view>
   </block>
 </view>

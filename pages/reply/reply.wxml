@@ -62,14 +62,14 @@
     </view>
     <textarea 
       class="blessing-input"
-      placeholder="请粘贴您收到的祝福语，AI将为您生成得体的回复..."
+      placeholder="请粘贴您收到的祝福语，将为您创作得体的回复..."
       value="{{receivedBlessing}}"
       bindinput="onReceivedBlessingInput"
       maxlength="500"
     />
   </view>
 
-  <!-- 生成结果 -->
+  <!-- 创作结果 -->
   <view class="result-card" wx:if="{{generatedReply}}">
     <view class="result-text">{{generatedReply}}</view>
     <view class="result-actions">
@@ -80,15 +80,15 @@
     </view>
   </view>
 
-  <!-- 生成按钮（仅在次数未用完时显示） -->
+  <!-- 创作按钮（仅在次数未用完时显示） -->
   <button 
     wx:if="{{usageInfo.type !== 'need_login' && usageInfo.type !== 'need_invite'}}"
     class="generate-btn {{!canGenerate ? 'disabled' : ''}}"
     bindtap="generateReply"
     disabled="{{!canGenerate || loading}}"
   >
-    <text wx:if="{{!loading}}">💬 生成回复语</text>
-    <text wx:else>生成中...</text>
+    <text wx:if="{{!loading}}">💬 创作回复语</text>
+    <text wx:else>创作中...</text>
   </button>
 
   <!-- 使用次数提示（仅在未显示限制卡片时显示） -->
@@ -162,6 +162,6 @@
   <!-- 加载动画 -->
   <view class="loading" wx:if="{{loading}}">
     <view class="loading-icon">💬</view>
-    <text class="loading-text">AI正在思考回复...</text>
+    <text class="loading-text">正在为您创作回复...</text>
   </view>
 </view>

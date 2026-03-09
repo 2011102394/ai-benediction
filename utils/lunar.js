@@ -182,7 +182,7 @@ function getLunarYearForDate(year, month, day, forSpringFestival = false) {
 }
 
 /**
- * 获取当前日期的生肖年份信息（用于祝福语生成）
+ * 获取当前日期的生肖年份信息（用于祝福语创作）
  * @param {boolean} isSpringFestival - 是否为春节祝福
  * @returns {Object} 包含农历年、生肖等信息的对象
  */

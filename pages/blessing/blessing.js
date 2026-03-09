@@ -1,5 +1,5 @@
 /**
- * 祝福语生成页面
+ * 祝福语创作页面
  */
 const { checkUsage, consumeUsage, addInviteReward, reinitUsageAfterLogin } = require('../../utils/usage.js')
 const { isLoggedIn, login } = require('../../utils/user.js')
@@ -35,7 +35,7 @@ Page({
     this.loadRecipients()
     this.checkUserUsage()
     this.getUserOpenId()
-    
+
     // 处理邀请参数
     if (options && options.inviter) {
       this.handleInvite(options.inviter)
@@ -64,7 +64,7 @@ Page({
   onShareAppMessage() {
     const openId = this.data.userOpenId
     return {
-      title: 'AI智能祝福语生成器，节日祝福不用愁！',
+      title: '节日祝福语创作助手，节日祝福不用愁！',
       path: openId ? `/pages/blessing/blessing?inviter=${openId}` : '/pages/blessing/blessing',
       imageUrl: '/images/share-cover.png' // 可选：自定义分享图片
     }
@@ -74,7 +74,7 @@ Page({
   onShareTimeline() {
     const openId = this.data.userOpenId
     return {
-      title: 'AI智能祝福语生成器',
+      title: '节日祝福语创作助手',
       query: openId ? `inviter=${openId}` : '',
       imageUrl: '/images/share-cover.png'
     }
@@ -86,11 +86,11 @@ Page({
       const res = await wx.cloud.callFunction({
         name: 'getFestivals'
       })
-      
+
       if (res.result && res.result.code === 0 && res.result.data && res.result.data.festivals.length > 0) {
         this.setData({ festivals: res.result.data.festivals })
       }
-      
+
       // 默认选中第一个
       const festivals = this.data.festivals
       if (festivals.length > 0 && !this.data.selectedFestival) {
@@ -113,7 +113,7 @@ Page({
       const res = await wx.cloud.callFunction({
         name: 'getRecipients'
       })
-      
+
       if (res.result && res.result.code === 0 && res.result.data && res.result.data.recipients.length > 0) {
         this.setData({ recipients: res.result.data.recipients })
       }
@@ -135,7 +135,7 @@ Page({
   selectFestival(e) {
     const { id, name, theme } = e.currentTarget.dataset
     const isCustom = id === 'custom'
-    
+
     this.setData({
       selectedFestival: id,
       selectedFestivalName: name,
@@ -147,7 +147,7 @@ Page({
   selectRecipient(e) {
     const { id, name } = e.currentTarget.dataset
     const isCustom = id === 'custom'
-    
+
     this.setData({
       selectedRecipient: id,
       selectedRecipientName: name,
@@ -236,7 +236,7 @@ Page({
         name: 'saveCustomFestival',
         data: { name, theme: 'custom' }
       })
-      
+
       if (res.result.code === 0) {
         wx.showToast({ title: '添加成功', icon: 'success' })
         this.setData({
@@ -280,7 +280,7 @@ Page({
         name: 'saveCustomRecipient',
         data: { name }
       })
-      
+
       if (res.result.code === 0) {
         wx.showToast({ title: '添加成功', icon: 'success' })
         this.setData({
@@ -364,7 +364,7 @@ Page({
     const randomSeed = Math.floor(Math.random() * 1000)
 
     return {
-      prompt: `你是一位擅长写节日祝福语的文案专家。请生成一段${zodiacText}${festivalName || festival}祝福语。
+      prompt: `你是一位擅长写节日祝福语的文案专家。请创作一段${zodiacText}${festivalName || festival}祝福语。
 
 【节日】${festivalName || festival}
 【祝福对象】${recipientName || recipient}
@@ -384,10 +384,10 @@ ${zodiacRequirement}
     }
   },
 
-  // 使用 wx.cloud.extend.AI 生成祝福语（前端直接调用，使用 AI 小程序成长计划赠送的 Token）
+  // 使用 wx.cloud.extend.AI 创作祝福语（前端直接调用，使用云服务能力）
   async generateBlessing() {
     const { selectedFestival, selectedFestivalName, selectedRecipient, selectedRecipientName } = this.data
-    
+
     if (!selectedFestival || !selectedRecipient) {
       wx.showToast({ title: '请选择节日和对象', icon: 'none' })
       return
@@ -401,11 +401,11 @@ ${zodiacRequirement}
       return
     }
 
-    // 检查是否支持 AI 能力
+      // 检查是否支持云服务能力
     if (!wx.cloud || !wx.cloud.extend || !wx.cloud.extend.AI) {
       wx.showModal({
         title: '提示',
-        content: '当前基础库版本不支持 AI 能力，请升级微信版本后重试',
+        content: '当前微信版本过低，请升级后重试',
         showCancel: false
       })
       return
@@ -431,7 +431,7 @@ ${zodiacRequirement}
         data: {
           model: 'hunyuan-turbos-latest',
           messages: [
-            { role: 'system', content: '你是一位擅长写节日祝福语的文案专家，生成的祝福语要温馨、得体、富有文采。' },
+            { role: 'system', content: '你是一位擅长写节日祝福语的文案专家，创作的祝福语要温馨、得体、富有文采。' },
             { role: 'user', content: prompt }
           ],
           temperature: 0.8,
@@ -461,8 +461,8 @@ ${zodiacRequirement}
         throw new Error('生成内容为空')
       }
     } catch (err) {
-      console.error('生成祝福语失败:', err)
-      wx.showToast({ title: '生成失败，请重试', icon: 'none' })
+      console.error('创作祝福语失败:', err)
+      wx.showToast({ title: '创作失败，请重试', icon: 'none' })
     } finally {
       this.setData({ loading: false })
     }
@@ -538,24 +538,24 @@ ${zodiacRequirement}
     if (pendingInviter) {
       // 给被邀请人添加奖励
       const newCount = addInviteReward(2)
-      
+
       wx.showModal({
         title: '获得邀请奖励',
-        content: '你通过好友邀请进入，已获得2次额外生成机会！',
+        content: '你通过好友邀请进入，已获得2次额外创作机会！',
         showCancel: false,
         success: () => {
           this.checkUserUsage()
         }
       })
-      
+
       // 清除待处理标记
       wx.removeStorageSync('pending_inviter')
-      
+
       // 调用云函数给邀请人添加奖励
       wx.cloud.callFunction({
         name: 'rewardInviter',
         data: { inviterId: pendingInviter }
-      }).catch(() => {})
+      }).catch(() => { })
     }
   },
 
@@ -590,12 +590,12 @@ ${zodiacRequirement}
       })
       return
     }
-    
+
     wx.showShareMenu({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
     })
-    
+
     wx.showModal({
       title: '邀请好友',
       content: '点击右上角「...」选择「转发给朋友」，好友通过你的分享进入小程序后，双方均可获得2次额外机会！',
@@ -607,40 +607,40 @@ ${zodiacRequirement}
   // 处理邀请回调（被邀请人进入时）
   handleInvite(inviterId) {
     if (!inviterId) return
-    
+
     // 只有登录用户才能接受邀请奖励
     if (!isLoggedIn()) {
       // 保存邀请人ID，登录后再处理
       wx.setStorageSync('pending_inviter', inviterId)
       return
     }
-    
+
     // 检查今天是否已经处理过邀请
     const today = new Date().toDateString()
     const lastInviteDate = wx.getStorageSync('last_invite_date')
     const processedInviters = wx.getStorageSync('processed_inviters') || []
-    
+
     if (lastInviteDate === today && processedInviters.includes(inviterId)) {
       return // 今天已经处理过这个邀请人的邀请
     }
-    
+
     // 给被邀请人添加奖励（每次2次）
     const newCount = addInviteReward(2)
-    
+
     // 记录已处理
     processedInviters.push(inviterId)
     wx.setStorageSync('processed_inviters', processedInviters)
     wx.setStorageSync('last_invite_date', today)
-    
+
     wx.showModal({
       title: '欢迎新朋友！',
-      content: `你通过好友邀请进入，已获得2次额外生成机会！`,
+      content: `你通过好友邀请进入，已获得2次额外创作机会！`,
       showCancel: false,
       success: () => {
         this.checkUserUsage()
       }
     })
-    
+
     // 调用云函数给邀请人也添加奖励
     this.rewardInviter(inviterId)
   },

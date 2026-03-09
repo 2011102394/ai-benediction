@@ -225,7 +225,7 @@
   font-weight: 500;
 }
 
-/* 生成按钮宽度100% */
+/* 创作按钮宽度100% */
 .generate-btn {
   width: 100% !important;
   box-sizing: border-box;

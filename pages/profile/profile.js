@@ -80,7 +80,7 @@ Page({
       
       wx.showModal({
         title: '获得邀请奖励',
-        content: `你通过好友邀请进入，已获得2次额外生成机会！`,
+        content: `你通过好友邀请进入，已获得2次额外创作机会！`,
         showCancel: false
       })
       
@@ -127,7 +127,7 @@ Page({
     const app = getApp()
     const openId = app.globalData.openid
     return {
-      title: 'AI智能祝福语生成器，节日祝福不用愁！',
+      title: '节日祝福语创作助手，节日祝福不用愁！',
       path: openId ? `/pages/blessing/blessing?inviter=${openId}` : '/pages/blessing/blessing',
       imageUrl: '/images/share-cover.png'
     }
@@ -138,7 +138,7 @@ Page({
     const app = getApp()
     const openId = app.globalData.openid
     return {
-      title: 'AI智能祝福语生成器',
+      title: '节日祝福语创作助手',
       query: openId ? `inviter=${openId}` : '',
       imageUrl: '/images/share-cover.png'
     }

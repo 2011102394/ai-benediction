@@ -108,7 +108,7 @@
     
     <view class="action-item" bindtap="goToBlessing">
       <text class="action-icon">✨</text>
-      <text class="action-text">生成祝福</text>
+      <text class="action-text">创作祝福</text>
       <text class="action-arrow">›</text>
     </view>
     

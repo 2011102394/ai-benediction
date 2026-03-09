@@ -9,7 +9,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#D32F2F",
-    "navigationBarTitleText": "吉语集",
+    "navigationBarTitleText": "吉语集-节日祝福语创作助手",
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
@@ -20,7 +20,7 @@
     "list": [
       {
         "pagePath": "pages/blessing/blessing",
-        "text": "祝福语"
+        "text": "创作祝福"
       },
       {
         "pagePath": "pages/reply/reply",
