@@ -65,8 +65,8 @@ Page({
     const openId = this.data.userOpenId
     return {
       title: '节日祝福语创作助手，节日祝福不用愁！',
-      path: openId ? `/pages/blessing/blessing?inviter=${openId}` : '/pages/blessing/blessing',
-      imageUrl: '/images/share-cover.png' // 可选：自定义分享图片
+      path: openId ? `/pages/blessing/blessing?inviter=${openId}` : '/pages/blessing/blessing'
+      // 不设置 imageUrl，微信会自动截取页面内容作为分享图
     }
   },
 
@@ -75,8 +75,8 @@ Page({
     const openId = this.data.userOpenId
     return {
       title: '节日祝福语创作助手',
-      query: openId ? `inviter=${openId}` : '',
-      imageUrl: '/images/share-cover.png'
+      query: openId ? `inviter=${openId}` : ''
+      // 不设置 imageUrl，微信会自动截取页面内容作为分享图
     }
   },
 
